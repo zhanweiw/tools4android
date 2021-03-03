@@ -1,0 +1,17 @@
+diff --git a/tests/cc/test_c_api.cc b/tests/cc/test_c_api.cc
+index e456840d..250a080e 100644
+--- a/tests/cc/test_c_api.cc
++++ b/tests/cc/test_c_api.cc
+@@ -151,10 +151,12 @@ static int mntns_func(void *arg) {
+     return -1;
+   }
+
++#ifndef __ANDROID__ // Avoid compile error for Android.
+   if (dlinfo(dlhdl, RTLD_DI_LINKMAP, &lm) < 0) {
+     fprintf(stderr, "Unable to find origin of libz.so.1: %s\n", dlerror());
+     return -1;
+   }
++#endif
+
+   strncpy(libpath, lm->l_name, 1024);
+   dlclose(dlhdl);
