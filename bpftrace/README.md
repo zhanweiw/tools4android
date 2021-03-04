@@ -14,5 +14,5 @@ $ cd bpftrace
 $ mkdir -p build && cd build
 $ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/data/data/com.termux/files/usr
 $ make bpftrace -j4
-$ make install
+$ ./src/bpftrace
 ```
