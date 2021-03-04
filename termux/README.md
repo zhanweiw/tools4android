@@ -10,7 +10,7 @@ usr\include\linux\eventpoll.h
 + typedef unsigned __bitwise __poll_t;
 ```
 
-**Run termux app with root permissin:**
+**Run termux app with root permission:**
 ```
 adb root
 adb shell
