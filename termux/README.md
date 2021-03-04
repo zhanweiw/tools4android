@@ -1,4 +1,4 @@
-For compile bcc & bpftrace, make change in '~/../usr/include/':
+**For compile bcc & bpftrace, make change in '~/../usr/include/':**
 ```
 usr\include\asm-generic\types.h
 + #define __user
