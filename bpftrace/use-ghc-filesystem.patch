@@ -1,0 +1,22 @@
+diff --git a/src/utils.cpp b/src/utils.cpp
+index 4a0e53d..90a77b8 100644
+--- a/src/utils.cpp
++++ b/src/utils.cpp
+@@ -27,6 +27,10 @@
+
+ #include <linux/version.h>
+
++#ifdef __ANDROID__ // Use ghc filesystem(https://github.com/gulrak/filesystem)
++#include <ghc/filesystem.hpp>
++namespace std_filesystem = ghc::filesystem;
++#else
+ #if __has_include(<filesystem>)
+ #include <filesystem>
+ namespace std_filesystem = std::filesystem;
+@@ -36,6 +40,7 @@ namespace std_filesystem = std::experimental::filesystem;
+ #else
+ #error "neither <filesystem> nor <experimental/filesystem> are present"
+ #endif
++#endif
+
+ namespace {
