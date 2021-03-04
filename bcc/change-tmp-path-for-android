@@ -1,0 +1,62 @@
+```
+diff --git a/src/cc/bcc_elf.c b/src/cc/bcc_elf.c
+index 7459bfa1..e3fa6a27 100644
+--- a/src/cc/bcc_elf.c
++++ b/src/cc/bcc_elf.c
+@@ -803,7 +803,11 @@ static int find_vdso(struct mod_info *info, int enter_ns, void *payload) {
+     goto on_error;
+   memcpy(image, (void *)info->start_addr, sz);
+
++#ifdef __ANDROID__
++  snprintf(tmpfile, sizeof(tmpfile), "/data/local/tmp/bcc/bcc_%d_vdso_image_XXXXXX", getpid());
++#else
+   snprintf(tmpfile, sizeof(tmpfile), "/tmp/bcc_%d_vdso_image_XXXXXX", getpid());
++#endif
+   fd = mkostemp(tmpfile, O_CLOEXEC);
+   if (fd < 0) {
+     fprintf(stderr, "Unable to create temp file: %s\n", strerror(errno));
+diff --git a/src/cc/frontends/clang/kbuild_helper.cc b/src/cc/frontends/clang/kbuild_helper.cc
+index c4e0f074..d77be2b1 100644
+--- a/src/cc/frontends/clang/kbuild_helper.cc
++++ b/src/cc/frontends/clang/kbuild_helper.cc
+@@ -163,7 +163,11 @@ static inline int extract_kheaders(const std::string &dirpath,
+     }
+   }
+
++#ifdef __ANDROID__
++  snprintf(dirpath_tmp, sizeof(dirpath_tmp), "/data/local/tmp/kheaders-%s-XXXXXX", uname_data.release);
++#else
+   snprintf(dirpath_tmp, sizeof(dirpath_tmp), "/tmp/kheaders-%s-XXXXXX", uname_data.release);
++#endif
+   if (mkdtemp(dirpath_tmp) == NULL) {
+     ret = -1;
+     goto cleanup;
+@@ -205,7 +209,11 @@ int get_proc_kheaders(std::string &dirpath)
+   if (uname(&uname_data))
+     return -errno;
+
++#ifdef __ANDROID__
++  snprintf(dirpath_tmp, 256, "/data/local/tmp/kheaders-%s", uname_data.release);
++#else
+   snprintf(dirpath_tmp, 256, "/tmp/kheaders-%s", uname_data.release);
++#endif
+   dirpath = std::string(dirpath_tmp);
+
+   if (file_exists(dirpath_tmp))
+diff --git a/src/cc/frontends/clang/kbuild_helper.h b/src/cc/frontends/clang/kbuild_helper.h
+index 2a254f16..71327a0c 100644
+--- a/src/cc/frontends/clang/kbuild_helper.h
++++ b/src/cc/frontends/clang/kbuild_helper.h
+@@ -66,7 +66,11 @@ static int ftw_cb(const char *path, const struct stat *, int, struct FTW *) {
+ // Scoped class to manage the creation/deletion of tmpdirs
+ class TmpDir {
+  public:
++#ifdef __ANDROID__
++  explicit TmpDir(const std::string &prefix = "/data/local/tmp/bcc/bcc-")
++#else
+   explicit TmpDir(const std::string &prefix = "/tmp/bcc-")
++#endif
+       : ok_(false), prefix_(prefix) {
+     prefix_ += "XXXXXX";
+     if (::mkdtemp((char *)prefix_.data()) == NULL)
+```
