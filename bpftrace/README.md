@@ -12,7 +12,7 @@ $ export CXX=clang++
 $ git clone https://github.com/iovisor/bpftrace.git 
 $ cd bpftrace
 $ mkdir -p build && cd build
-$ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/data/data/com.termux/files/usr
-$ make bpftrace -j4
-$ ./src/bpftrace
+$ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/data/data/com.termux/files/usr -DBUILD_TESTING=0
+$ make -j4
+$ make install
 ```
