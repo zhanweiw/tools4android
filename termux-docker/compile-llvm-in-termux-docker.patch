@@ -1,0 +1,64 @@
+diff --git a/packages/libelf/build.sh b/packages/libelf/build.sh
+index 8eaa8ebb1..6bbc0c033 100644
+--- a/packages/libelf/build.sh
++++ b/packages/libelf/build.sh
+@@ -5,7 +5,7 @@ TERMUX_PKG_MAINTAINER="@termux"
+ # NOTE: We only build the libelf part of elfutils for now,
+ # as other parts are not clang compatible.
+ TERMUX_PKG_VERSION=0.182
+-TERMUX_PKG_SRCURL=ftp://sourceware.org/pub/elfutils/${TERMUX_PKG_VERSION}/elfutils-${TERMUX_PKG_VERSION}.tar.bz2
++TERMUX_PKG_SRCURL=https://sourceware.org/elfutils/ftp/${TERMUX_PKG_VERSION}/elfutils-${TERMUX_PKG_VERSION}.tar.bz2
+ TERMUX_PKG_SHA256=ecc406914edf335f0b7fc084ebe6c460c4d6d5175bfdd6688c1c78d9146b8858
+ # libandroid-support for langinfo.
+ TERMUX_PKG_DEPENDS="libandroid-support, zlib, libcurl"
+diff --git a/packages/libffi/build.sh b/packages/libffi/build.sh
+index 66b533a9f..354162c38 100644
+--- a/packages/libffi/build.sh
++++ b/packages/libffi/build.sh
+@@ -4,7 +4,7 @@ TERMUX_PKG_LICENSE="MIT"
+ TERMUX_PKG_MAINTAINER="@termux"
+ TERMUX_PKG_VERSION=3.3
+ TERMUX_PKG_REVISION=2
+-TERMUX_PKG_SRCURL=ftp://sourceware.org/pub/libffi/libffi-${TERMUX_PKG_VERSION}.tar.gz
++TERMUX_PKG_SRCURL=https://github.com/libffi/libffi/releases/download/v3.3/libffi-${TERMUX_PKG_VERSION}.tar.gz
+ TERMUX_PKG_SHA256=72fba7922703ddfa7a028d513ac15a85c8d54c8d67f55fa5a4802885dc652056
+ TERMUX_PKG_BREAKS="libffi-dev"
+ TERMUX_PKG_REPLACES="libffi-dev"
+diff --git a/packages/libllvm/build.sh b/packages/libllvm/build.sh
+index 6b040a8b3..5a0d02808 100644
+--- a/packages/libllvm/build.sh
++++ b/packages/libllvm/build.sh
+@@ -20,6 +20,7 @@ TERMUX_PKG_REPLACES="gcc, libclang, libclang-dev, libllvm-dev"
+ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
+ -DPYTHON_EXECUTABLE=$(which python3)
+ -DLLVM_ENABLE_PIC=ON
++-DLLVM_ENABLE_RTTI=ON
+ -DLLVM_ENABLE_PROJECTS=clang;clang-tools-extra;compiler-rt;lld;lldb;openmp;polly
+ -DLLVM_ENABLE_LIBEDIT=OFF
+ -DLLVM_INCLUDE_TESTS=OFF
+diff --git a/packages/libxml2/build.sh b/packages/libxml2/build.sh
+index dddbdd1d3..4a7e31a7c 100644
+--- a/packages/libxml2/build.sh
++++ b/packages/libxml2/build.sh
+@@ -4,7 +4,7 @@ TERMUX_PKG_LICENSE="MIT"
+ TERMUX_PKG_MAINTAINER="@termux"
+ TERMUX_PKG_VERSION=2.9.10
+ TERMUX_PKG_REVISION=4
+-TERMUX_PKG_SRCURL=ftp://xmlsoft.org/libxml2/libxml2-${TERMUX_PKG_VERSION}.tar.gz
++TERMUX_PKG_SRCURL=http://xmlsoft.org/sources/libxml2-${TERMUX_PKG_VERSION}.tar.gz
+ TERMUX_PKG_SHA256=aafee193ffb8fe0c82d4afef6ef91972cbaf5feea100edc2f262750611b4be1f
+ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="--without-python"
+ TERMUX_PKG_RM_AFTER_INSTALL="share/gtk-doc"
+diff --git a/packages/valgrind/build.sh b/packages/valgrind/build.sh
+index 62b546889..cc700a2a8 100644
+--- a/packages/valgrind/build.sh
++++ b/packages/valgrind/build.sh
+@@ -4,7 +4,7 @@ TERMUX_PKG_LICENSE="GPL-2.0"
+ TERMUX_PKG_MAINTAINER="@termux"
+ TERMUX_PKG_VERSION=3.16.1
+ TERMUX_PKG_REVISION=2
+-TERMUX_PKG_SRCURL=ftp://sourceware.org/pub/valgrind/valgrind-${TERMUX_PKG_VERSION}.tar.bz2
++TERMUX_PKG_SRCURL=https://sourceware.org/pub/valgrind/valgrind-${TERMUX_PKG_VERSION}.tar.bz2
+ TERMUX_PKG_SHA256=c91f3a2f7b02db0f3bc99479861656154d241d2fdb265614ba918cc6720a33ca
+ TERMUX_PKG_BREAKS="valgrind-dev"
+ TERMUX_PKG_REPLACES="valgrind-dev"
