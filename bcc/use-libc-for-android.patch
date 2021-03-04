@@ -1,0 +1,39 @@
+diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
+index 1375c2a4..e57405ad 100644
+--- a/src/python/bcc/__init__.py
++++ b/src/python/bcc/__init__.py
+@@ -205,7 +205,10 @@ class BPF(object):
+     class timespec(ct.Structure):
+         _fields_ = [('tv_sec', ct.c_long), ('tv_nsec', ct.c_long)]
+
+-    _librt = ct.CDLL('librt.so.1', use_errno=True)
++    if "with-libc" in platform.platform():
++        _librt = ct.CDLL('libc.so', use_errno=True)
++    else:
++        _librt = ct.CDLL('librt.so.1', use_errno=True)
+     _clock_gettime = _librt.clock_gettime
+     _clock_gettime.argtypes = [ct.c_int, ct.POINTER(timespec)]
+
+diff --git a/src/python/bcc/perf.py b/src/python/bcc/perf.py
+index b1c13f72..329643f3 100644
+--- a/src/python/bcc/perf.py
++++ b/src/python/bcc/perf.py
+@@ -14,6 +14,7 @@
+
+ import ctypes as ct
+ import os
++import platform
+ from .utils import get_online_cpus
+
+ class Perf(object):
+@@ -68,7 +69,10 @@ class Perf(object):
+         PERF_EVENT_IOC_ENABLE = 9216
+
+         # fetch syscall routines
+-        libc = ct.CDLL('libc.so.6', use_errno=True)
++        if "with-libc" in platform.platform():
++            libc = ct.CDLL('libc.so', use_errno=True)
++        else:
++            libc = ct.CDLL('libc.so.6', use_errno=True)
+         syscall = libc.syscall          # not declaring vararg types
+         ioctl = libc.ioctl              # not declaring vararg types
