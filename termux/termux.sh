@@ -1,0 +1,13 @@
+export TERM=xterm-256color
+export HOME=/data/data/com.termux/files/home
+export PATH=/data/data/com.termux/files/usr/bin:/data/data/com.termux/files/usr/sbin:$PATH
+export LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib:$LD_LIBRARY_PATH
+export PREFIX=/data/data/com.termux/files/usr
+export OLDPWD=/data/data/com.termux/files/home
+export PWD=/data/data/com.termux/files/home
+export TMPDIR=/data/data/com.termux/files/usr/tmp
+export PREFIX=/data/data/com.termux/files/usr
+export _=/data/data/com.termux/files/usr/bin/env
+export LANG=en_US.UTF-8
+export SHLVL=1
+export HISTCONTROL=ignoreboth
