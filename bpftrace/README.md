@@ -4,7 +4,8 @@ Use ghc filesystem(https://github.com/gulrak/filesystem) for compiling bpftrace 
 You need to copy 'ghc/filesystem.hpp' to '~/../usr/include'.
 
 **build bpftrace**
-build and install 'bcc' first, then:
+
+*build and install 'bcc' first, then:*
 ```
 $ export CC=clang
 $ export CXX=clang++
