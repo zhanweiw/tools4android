@@ -1,0 +1,28 @@
+diff --git a/configure.ac b/configure.ac
+index c6019a0c..92be5f24 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -380,6 +380,7 @@ else
+     LDFLAGS_NOSTARTFILES="-XCClinker -nostartfiles"
+ fi
+
++android="yes"
+ if test x$GCC = xyes -a x$intel_compiler != xyes -a x$qcc_compiler != xyes -a x$android != xyes; then
+   LIBCRTS="-lgcc_s"
+ fi
+diff --git a/src/coredump/_UCD_internal.h b/src/coredump/_UCD_internal.h
+index f5150205..9a440552 100644
+--- a/src/coredump/_UCD_internal.h
++++ b/src/coredump/_UCD_internal.h
+@@ -74,6 +74,11 @@ struct coredump_phdr
+
+ typedef struct coredump_phdr coredump_phdr_t;
+
++#ifndef HAVE_STRUCT_ELF_PRSTATUS
++#define HAVE_STRUCT_ELF_PRSTATUS 1
++#include <linux/elfcore.h>
++#endif
++
+ #if defined(HAVE_STRUCT_ELF_PRSTATUS)
+ #define PRSTATUS_STRUCT elf_prstatus
+ #elif defined(HAVE_STRUCT_PRSTATUS)
