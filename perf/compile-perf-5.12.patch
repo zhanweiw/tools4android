@@ -1,0 +1,81 @@
+diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+index 887a494ad5fc..bb9c96a658db 100644
+--- a/tools/lib/bpf/Makefile
++++ b/tools/lib/bpf/Makefile
+@@ -82,7 +82,7 @@ endif
+
+ # Append required CFLAGS
+ override CFLAGS += $(EXTRA_WARNINGS) -Wno-switch-enum
+-override CFLAGS += -Werror -Wall
++override CFLAGS += -Wall
+ override CFLAGS += $(INCLUDES)
+ override CFLAGS += -fvisibility=hidden
+ override CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 3718d65cffac..203a9cca2da9 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -69,7 +69,7 @@ INCLUDES = \
+
+ # Append required CFLAGS
+ override CFLAGS += $(EXTRA_WARNINGS)
+-override CFLAGS += -Werror -Wall
++override CFLAGS += -Wall
+ override CFLAGS += -fPIC
+ override CFLAGS += $(INCLUDES)
+ override CFLAGS += -fvisibility=hidden
+diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
+index d4137559be05..0453be3189f2 100644
+--- a/tools/perf/util/genelf.h
++++ b/tools/perf/util/genelf.h
+@@ -48,14 +48,24 @@ int jit_add_debug_info(Elf *e, uint64_t code_addr, void *debug, int nr_debug_ent
+ #define GEN_ELF_ENDIAN ELFDATA2LSB
+ #endif
+
++// Avoid compile issue for Android.
++#ifndef ELF32_ST_VISIBILITY
++#define ELF32_ST_VISIBILITY(o) ((o) & 0x03)
++#endif
++#ifndef ELF64_ST_VISIBILITY
++#define ELF64_ST_VISIBILITY(o) ELF32_ST_VISIBILITY (o)
++#endif
++
+ #if GEN_ELF_CLASS == ELFCLASS64
+ #define elf_newehdr    elf64_newehdr
+ #define elf_getshdr    elf64_getshdr
+ #define Elf_Ehdr       Elf64_Ehdr
+ #define Elf_Shdr       Elf64_Shdr
+ #define Elf_Sym                Elf64_Sym
++#ifndef __ANDROID__ // Avoid compile issue for Android.
+ #define ELF_ST_TYPE(a) ELF64_ST_TYPE(a)
+ #define ELF_ST_BIND(a) ELF64_ST_BIND(a)
++#endif
+ #define ELF_ST_VIS(a)  ELF64_ST_VISIBILITY(a)
+ #else
+ #define elf_newehdr    elf32_newehdr
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 77fc46ca07c0..427dd2bdba17 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1934,7 +1934,9 @@ static int map__strcmp_name(const void *name, const void *b)
+
+ void __maps__sort_by_name(struct maps *maps)
+ {
++#ifndef __ANDROID__ // Avoid qsort dead loop in Android devices.
+        qsort(maps->maps_by_name, maps->nr_maps, sizeof(struct map *), map__strcmp);
++#endif
+ }
+
+ static int map__groups__sort_by_name_from_rbtree(struct maps *maps)
+@@ -1985,9 +1987,11 @@ struct map *maps__find_by_name(struct maps *maps, const char *name)
+         * as maps->maps_by_name mirrors the rbtree when lookups by name are
+         * made.
+         */
++#ifndef __ANDROID__ // Avoid qsort dead loop in Android devices.
+        map = __maps__find_by_name(maps, name);
+        if (map || maps->maps_by_name != NULL)
+                goto out_unlock;
++#endif
+
+        /* Fallback to traversing the rbtree... */
+        maps__for_each_entry(maps, map)
