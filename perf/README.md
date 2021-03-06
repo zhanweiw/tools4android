@@ -9,5 +9,5 @@
 git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 cd ~/source/linux-master/tools/perf
 Add patch 'compile-perf-5.12.patch'.
-make WERROR=0 NO_SDT=1 NO_JVMTI=1
+make WERROR=0 NO_SDT=1 NO_JVMTI=1 NO_AIO
 ```
