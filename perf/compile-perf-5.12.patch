@@ -1,12 +1,40 @@
+diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
+index 39bb322707b4..5c20b003167f 100644
+--- a/tools/bpf/Makefile
++++ b/tools/bpf/Makefile
+@@ -73,7 +73,7 @@ $(OUTPUT)%.lex.o: $(OUTPUT)%.lex.c
+
+ PROGS = $(OUTPUT)bpf_jit_disasm $(OUTPUT)bpf_dbg $(OUTPUT)bpf_asm
+
+-all: $(PROGS) bpftool runqslower
++all: $(PROGS) bpftool
+
+ $(OUTPUT)bpf_jit_disasm: CFLAGS += -DPACKAGE='bpf_jit_disasm'
+ $(OUTPUT)bpf_jit_disasm: $(OUTPUT)bpf_jit_disasm.o
+diff --git a/tools/bpf/bpf_jit_disasm.c b/tools/bpf/bpf_jit_disasm.c
+index c8ae95804728..31bffba3674a 100644
+--- a/tools/bpf/bpf_jit_disasm.c
++++ b/tools/bpf/bpf_jit_disasm.c
+@@ -32,6 +32,10 @@
+ #define CMD_ACTION_SIZE_BUFFER         10
+ #define CMD_ACTION_READ_ALL            3
+
++#ifndef DEFFILEMODE
++#define DEFFILEMODE (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH) /* 0666 */
++#endif
++
+ static void get_exec_path(char *tpath, size_t size)
+ {
+        char *path;
 diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 74e255d58d8d..74194b86dda6 100644
+index 74e255d58d8d..98a9a0b7099c 100644
 --- a/tools/build/Makefile.feature
 +++ b/tools/build/Makefile.feature
 @@ -9,6 +9,7 @@ endif
  feature_check = $(eval $(feature_check_code))
  define feature_check_code
    feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  $(warning feature-$(1) make OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin)
++  # $ (warning feature-$(1) make OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin)
  endef
 
  feature_set = $(eval $(feature_set_code))
@@ -53,6 +81,20 @@ index 3718d65cffac..203a9cca2da9 100644
  override CFLAGS += -fPIC
  override CFLAGS += $(INCLUDES)
  override CFLAGS += -fvisibility=hidden
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 5345ac70cd83..4f7a2b9d3e57 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -917,8 +917,7 @@ endif
+ install-tools: all install-gtk
+        $(call QUIET_INSTALL, binaries) \
+                $(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(bindir_SQ)'; \
+-               $(INSTALL) $(OUTPUT)perf '$(DESTDIR_SQ)$(bindir_SQ)'; \
+-               $(LN) '$(DESTDIR_SQ)$(bindir_SQ)/perf' '$(DESTDIR_SQ)$(bindir_SQ)/trace'
++               $(INSTALL) $(OUTPUT)perf '$(DESTDIR_SQ)$(bindir_SQ)';
+ ifndef NO_PERF_READ_VDSO32
+        $(call QUIET_INSTALL, perf-read-vdso32) \
+                $(INSTALL) $(OUTPUT)perf-read-vdso32 '$(DESTDIR_SQ)$(bindir_SQ)';
 diff --git a/tools/perf/util/genelf.h b/tools/perf/util/genelf.h
 index d4137559be05..0453be3189f2 100644
 --- a/tools/perf/util/genelf.h
