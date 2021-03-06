@@ -3,7 +3,8 @@
 1. pkg install libcap zlib-static slang zstd
 2. Compile 'libunwind'.
 3. Compile 'binutils' for getting 'libiberty'.
-4. Compile 'perf'.
+4. Compile 'numactl' for getting 'libnuma'.
+5. Compile 'perf'.
 ```
 git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
 cd ~/source/linux-master/tools/perf
